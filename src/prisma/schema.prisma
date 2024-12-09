@@ -20,6 +20,8 @@ model customers {
   last_name       String
   state_province  String
   zip_postal_code Int
+
+  orders       orders[]
 }
 
 model employee_privileges {
@@ -45,6 +47,8 @@ model employees {
   state_province  String
   web_page        String
   zip_postal_code Int
+
+  orders       orders[]
 }
 
 model inventory_transaction_types {
@@ -81,6 +85,9 @@ model order_details {
   quantity          Float
   status_id         Int
   unit_price        Float
+
+  order                     orders                    @relation(fields: [order_id], references: [id])
+  product                   products                  @relation(fields: [product_id], references: [id])
 }
 
 model order_details_status {
@@ -102,11 +109,16 @@ model orders {
   ship_state_province  String
   ship_zip_postal_code Int
   shipped_date         String?
-  shipper_id           Int?
+  shipper_id           Int
   shipping_fee         Float
   status_id            Int
   tax_rate             Int
   taxes                Float
+
+  customer     customers      @relation(fields: [customer_id], references: [id])
+  employee     employees      @relation(fields: [employee_id], references: [id])
+  shipper      shippers       @relation(fields: [shipper_id], references: [id])
+  order_details            order_details[]
 }
 
 model orders_status {
@@ -138,6 +150,8 @@ model products {
   /// Multiple data types found: String: 11.1%, Int: 88.9% out of 45 sampled entries
   supplier_ids             Json
   target_level             Int
+
+  order_details            order_details[]
 }
 
 model purchase_order_details {
@@ -190,6 +204,7 @@ model shippers {
   country_region  String
   state_province  String
   zip_postal_code Int
+  orders          orders[]
 }
 
 model strings {
@@ -204,11 +219,4 @@ model suppliers {
   first_name String
   job_title  String
   last_name  String
-}
-
-model users {
-  id                  Int    @id @map("_id")  
-  name                String
-  email               String
-  is_onmailinglist    Boolean    @default(true)
 }
