@@ -2,6 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator prismaClassGenerator {
+    provider = "prisma-class-generator"
+    output   = "../api/northwind"
+}
+
 datasource NorthwindAPIDB {
   provider = "mongodb"
   url      = env("DATABASE_URL")
